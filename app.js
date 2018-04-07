@@ -6,25 +6,26 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//SERVE STATIC FILES
+// serve static files from /public
 app.use(express.static(__dirname + '/public'));
 
-//TEMPLATE ENGINE *PUG*
+// view engine setup
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
-// ROUTES
+// include routes
 var routes = require('./routes/index');
 app.use('/', routes);
 
-//404 AND ERROR HANDLER
+// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('File Not Found');
   err.status = 404;
   next(err);
 });
 
-//APP.UES CALLBACK
+// error handler
+// define as the last app.use callback
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
@@ -33,7 +34,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
-app.listen(3000, function () {
+// listen on port 3000
+app.listen(8080, function () {
   console.log('Express app listening on port 3000');
 });
