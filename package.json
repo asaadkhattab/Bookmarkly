@@ -1,0 +1,30 @@
+{
+  "name": "bookmarkly",
+  "version": "1.0.0",
+  "description": "Add your bookmarks on the cloud instead in your browser",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asaadkhattab/Bookmarkly.git"
+  },
+  "keywords": [
+    "bookmarks",
+    "internet",
+    "users"
+  ],
+  "author": "Asaad Khattab <asaad@khattab.live> (http://www.khattab.live)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asaadkhattab/Bookmarkly/issues"
+  },
+  "homepage": "https://github.com/asaadkhattab/Bookmarkly#readme",
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "express": "4.16.3",
+    "pug": "2.0.3",
+    "start": "5.1.0"
+  }
+}
