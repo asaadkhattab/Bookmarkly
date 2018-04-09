@@ -29,6 +29,13 @@ var UserSchema = new mongoose.Schema({
   }
 
 });
+
+//AUTHENTICATION
+UserSchema.statics.authenticate = function(email, password, callback) {
+  User.findOne({email:email})
+  .exec(function (error))
+}
+
 //PRESAVE HOOK
   //Runs before saving record! - middleware
 UserSchema.pre('save', function(next) {

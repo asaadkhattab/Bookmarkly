@@ -2,13 +2,29 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 
-// Register
+//********************* LOGIN ********************* //
+//GET
+router.get('/login', function(req, res, next) {
+  return res.render('login', {title:'Login'});
+});
+
+//POST
+router.post('/login', function(req, res, next) {
+  if (req.body.email && req.body.password){
+
+  } else {
+    var unauthorized = new Error('Fill all fields');
+    unauthorized.status = 401;
+    return next(unauthorized);
+  }
+});
+
+//********************* REGISTER ********************* //
   //GET
 router.get('/register', function(req, res, next) {
   return res.render('register', {title: 'Register'});
 });
 
-//REGISTER
   //POST
 router.post('/register', function(req, res, next) {
 
