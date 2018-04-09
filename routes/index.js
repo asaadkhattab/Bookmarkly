@@ -18,6 +18,20 @@ router.get('/profile', function(req,res, next){
     }
   });
 });
+//********************* LOGOUT *********************//
+router.get('/logout', function(req, res, next) {
+  if (req.session) {
+    //delete
+    req.session.destroy(function(err) {
+      if(err) {
+        return next(err);
+      }else {
+        return res.redirect('/');
+      }
+    });
+
+  }
+});
 
 //********************* LOGIN *********************//
 router.get('/login', function(req, res, next) {

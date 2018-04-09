@@ -6,11 +6,16 @@ var app = express();
 
 //SESSION - TRACK LOGINS
 app.use(session({
-  secret: 'welcome to bookmarly',
+  secret: 'welcome to bookmark',
   resave: true,
   saveUninitialized: false
-
 }));
+
+//MAKE USER ID AVAILABLE IN TEMPLATES
+app.use(function (req, res, next) {
+  res.locals.currentUser = req.session.userId;
+  next();
+});
 
 //MONGODB
 mongoose.connect("mongodb://localhost:27017/bookmarkly");
