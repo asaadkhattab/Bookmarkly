@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/user');
 
 // Register
   //GET
@@ -10,7 +11,42 @@ router.get('/register', function(req, res, next) {
 //REGISTER
   //POST
 router.post('/register', function(req, res, next) {
-  return res.send('User created!');
+
+  if (req.body.email &&
+      req.body.name &&
+      req.body.webAddress &&
+      req.body.password &&
+      req.body.confirmPassword) {
+
+        //PASSWORD CONFIRMATION CHECK
+        if (req.body.password !== req.body.confirmPassword){
+          var badRequest = new Error('Passwords do not match');
+          badRequest.status = 400;
+          return next(badRequest);
+        }
+
+        //CREATE OBJECT
+        var userData = {
+          email: req.body.email,
+          name: req.body.name,
+          webAddress: req.body.webAddress,
+          password: req.body.password
+        };
+
+        //INSERT INTO MONGO
+        User.create(userData, function(error, user){
+          if(error){
+            return next(error);
+          }else{
+            return res.redirect('/profile');
+          }
+        });
+
+      } else {
+        var badRequest = new Error('One field is empty!');
+        badRequest.status = 400;
+        return next(badRequest);
+      }
 })
 
 // GET /
