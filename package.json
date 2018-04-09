@@ -1,8 +1,7 @@
 {
-  "name": "bookmarkly",
+  "name": "Bookmarkly",
   "version": "1.0.0",
   "description": "Add your bookmarks on the cloud instead in your browser",
-  "main": "index.js",
   "scripts": {
     "start": "node ./app"
   },
@@ -24,9 +23,8 @@
   "dependencies": {
     "body-parser": "1.18.2",
     "express": "4.16.3",
+    "mongoose": "5.0.13",
     "pug": "2.0.3"
   },
-  "devDependencies": {
-    "nodemon": "1.17.3"
-  }
+  "devDependencies": {}
 }

@@ -4,11 +4,11 @@ var router = express.Router();
 // Register
   //GET
 router.get('/register', function(req, res, next) {
-  return res.send('Register today!');
+  return res.render('register', {title: 'Register'});
 });
 
 //REGISTER
-  //POST 
+  //POST
 router.post('/register', function(req, res, next) {
   return res.send('User created!');
 })
