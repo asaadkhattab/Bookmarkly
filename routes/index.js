@@ -2,15 +2,45 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 
-//********************* LOGIN ********************* //
-//GET
+//********************* PROFILE *********************//
+router.get('/profile', function(req,res, next){
+  if(! req.session.userId) {
+    var forbidden = new Error("Sorry, you do not have access.");
+    forbidden.status = 403;
+    return next(forbidden);
+  }
+  User.findById(req.session.userId)
+  .exec(function (error, user) {
+    if (error) {
+      return next(error);
+    } else {
+        return res.render('profile', {title: 'Profile', name: user.name, website: user.webAddress});
+    }
+  });
+});
+
+//********************* LOGIN *********************//
 router.get('/login', function(req, res, next) {
   return res.render('login', {title:'Login'});
 });
 
-//POST
 router.post('/login', function(req, res, next) {
   if (req.body.email && req.body.password){
+    //Call method on user object
+    User.authenticate(req.body.email, req.body.password, function (error, user)
+  {
+    //Invalid Login
+    if (error || !user) {
+      var unauthorized = new Error('Wrong email or pass');
+      unauthorized.status = 401;
+      return next(unauthorized);
+    }
+    //Session
+    else {
+      req.session.userId = user._id;
+      return res.redirect('/profile');
+    }
+  });
 
   } else {
     var unauthorized = new Error('Fill all fields');
@@ -19,7 +49,7 @@ router.post('/login', function(req, res, next) {
   }
 });
 
-//********************* REGISTER ********************* //
+//********************* REGISTER *********************//
   //GET
 router.get('/register', function(req, res, next) {
   return res.render('register', {title: 'Register'});
@@ -65,19 +95,22 @@ router.post('/register', function(req, res, next) {
       }
 })
 
-// GET /
+//********************* HOME ********************* //
 router.get('/', function(req, res, next) {
   return res.render('index', { title: 'Home' });
 });
 
-// GET /about
+//********************* ABOUT ********************* //
 router.get('/about', function(req, res, next) {
   return res.render('about', { title: 'About' });
 });
 
-// GET /contact
+//********************* CONTACT ********************* //
 router.get('/contact', function(req, res, next) {
   return res.render('contact', { title: 'Contact' });
 });
 
+
+
+//********************* EXPORT FILE ********************* //
 module.exports = router;

@@ -32,8 +32,26 @@ var UserSchema = new mongoose.Schema({
 
 //AUTHENTICATION
 UserSchema.statics.authenticate = function(email, password, callback) {
+  //Tell Mongoose to set a Query
   User.findOne({email:email})
-  .exec(function (error))
+  .exec(function (error, user){
+    if (error) {
+      return callback(error);
+    } else if {
+      var err = new Error('User is nto found');
+      err.status = 401;
+      return callback(err);
+    }
+    //Compare password with Hashed
+    bcrypt.compare(password, user.password, function(error, result) {
+      if(result === true)
+      {
+        return callback(null, user);
+      } else {
+        return callback();
+      }
+    })
+  });
 }
 
 //PRESAVE HOOK
