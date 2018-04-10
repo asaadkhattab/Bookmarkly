@@ -1,20 +1,17 @@
 var express = require('express');
 var router = express.Router();
-var User = require('../models/user');
+var User =       require('../models/user');
+var middleware = require('../middleware');
 
 //********************* PROFILE *********************//
-router.get('/profile', function(req,res, next){
-  if(! req.session.userId) {
-    var forbidden = new Error("Sorry, you do not have access.");
-    forbidden.status = 403;
-    return next(forbidden);
-  }
+router.get('/profile', middleware.requiresLogin, function(req,res, next){
+
   User.findById(req.session.userId)
   .exec(function (error, user) {
     if (error) {
       return next(error);
     } else {
-        return res.render('profile', {title: 'Profile', name: user.name, website: user.webAddress});
+        return res.render('profile', {title: 'Profile', name: user.name, webAddress: user.webAddress});
     }
   });
 });
@@ -34,7 +31,7 @@ router.get('/logout', function(req, res, next) {
 });
 
 //********************* LOGIN *********************//
-router.get('/login', function(req, res, next) {
+router.get('/login', middleware.loggedOut, function(req, res, next) {
   return res.render('login', {title:'Login'});
 });
 
@@ -65,7 +62,7 @@ router.post('/login', function(req, res, next) {
 
 //********************* REGISTER *********************//
   //GET
-router.get('/register', function(req, res, next) {
+router.get('/register', middleware.loggedOut, function(req, res, next) {
   return res.render('register', {title: 'Register'});
 });
 

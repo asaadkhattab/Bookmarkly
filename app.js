@@ -2,13 +2,22 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var session = require('express-session');
+var MongoStore = require ('connect-mongo')(session);
 var app = express();
+
+//MONGODB
+mongoose.connect("mongodb://localhost:27017/bookmarkly");
+var database = mongoose.connection;
+database.on('error', console.error.bind(console, 'The Error: '));
 
 //SESSION - TRACK LOGINS
 app.use(session({
   secret: 'welcome to bookmark',
   resave: true,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: database
+  })
 }));
 
 //MAKE USER ID AVAILABLE IN TEMPLATES
@@ -17,10 +26,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-//MONGODB
-mongoose.connect("mongodb://localhost:27017/bookmarkly");
-var database = mongoose.connection;
-database.on('error', console.error.bind(console, 'The Error: '));
 //PARSE INCOMING REQUESTS
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
