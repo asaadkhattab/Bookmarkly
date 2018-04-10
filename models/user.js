@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt');
 
 
 var UserSchema = new mongoose.Schema({
+
   email: {
     type: String,
     //Ensure there is not duplication in the email
@@ -11,23 +12,23 @@ var UserSchema = new mongoose.Schema({
     //Removes whitespace
     trim: true
   },
+
   name: {
     type:String,
     required: true,
     trim: true,
   },
+
   webAddress: {
     type:String,
     required:true,
     trim: true
-
   },
 
   password: {
     type: String,
     required:true
   }
-
 });
 
 //AUTHENTICATION
@@ -38,16 +39,18 @@ UserSchema.statics.authenticate = function(email, password, callback) {
     if (error) {
       return callback(error);
     } else if (!user){
-      var err = new Error('User is nto found');
+      var err = new Error('User is not found');
       err.status = 401;
       return callback(err);
     }
+
     //Compare password with Hashed
     bcrypt.compare(password, user.password, function(error, result) {
       if(result === true)
       {
         return callback(null, user);
-      } else {
+      }
+      else {
         return callback();
       }
     })

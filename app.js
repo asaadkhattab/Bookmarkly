@@ -5,12 +5,12 @@ var session = require('express-session');
 var MongoStore = require ('connect-mongo')(session);
 var app = express();
 
-//MONGODB
+//**************** MONGODB CONNECTION ****************//
 mongoose.connect("mongodb://localhost:27017/bookmarkly");
 var database = mongoose.connection;
 database.on('error', console.error.bind(console, 'The Error: '));
 
-//SESSION - TRACK LOGINS
+//**************** SESSION ****************//
 app.use(session({
   secret: 'welcome to bookmark',
   resave: true,
@@ -20,35 +20,36 @@ app.use(session({
   })
 }));
 
-//MAKE USER ID AVAILABLE IN TEMPLATES
+//******** MAKE USER ID AVAILABLE IN TEMPLATES********//
+
 app.use(function (req, res, next) {
   res.locals.currentUser = req.session.userId;
   next();
 });
 
-//PARSE INCOMING REQUESTS
+//**************** PARSE INCOMING REQUESTS****************//
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//SERVE STATIC FILES
+//**************** SERVE STATIC FILES ****************//
 app.use(express.static(__dirname + '/public'));
 
-//PUG TEMPLAGE ENGINE
+//**************** PUG ENGINE ****************//
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
-//ROUTES
+//**************** ROUTES ****************//
 var routes = require('./routes/index');
 app.use('/', routes);
 
-//404 HANDLE
+//**************** 404 ****************//
 app.use(function(req, res, next) {
-  var err = new Error('File Not Found');
-  err.status = 404;
-  next(err);
+  var notFound = new Error('File Not Found');
+  notFound.status = 404;
+  next(notFound);
 });
 
-//LAST APP.USE CALLBACK
+//**************** CALLBACK ****************//
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
@@ -57,7 +58,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-// listen on port 3000
+//**************** PORT 3000 ****************//
 app.listen(3000, function () {
-  console.log('Express app listening on port 3000');
+  console.log('Express app listening on port 3000.');
 });

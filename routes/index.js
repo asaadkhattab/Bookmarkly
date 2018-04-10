@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var User =       require('../models/user');
+var User = require('../models/user');
 var middleware = require('../middleware');
 
 //********************* PROFILE *********************//
@@ -11,7 +11,7 @@ router.get('/profile', middleware.requiresLogin, function(req,res, next){
     if (error) {
       return next(error);
     } else {
-        return res.render('profile', {title: 'Profile', name: user.name, webAddress: user.webAddress});
+        return res.render('profile', {title: 'Profile', name: user.name, website: user.webAddress});
     }
   });
 });
@@ -22,11 +22,10 @@ router.get('/logout', function(req, res, next) {
     req.session.destroy(function(err) {
       if(err) {
         return next(err);
-      }else {
+      } else {
         return res.redirect('/');
       }
     });
-
   }
 });
 
@@ -36,7 +35,7 @@ router.get('/login', middleware.loggedOut, function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-  if (req.body.email && req.body.password){
+  if (req.body.email && req.body.password) {
     //Call method on user object
     User.authenticate(req.body.email, req.body.password, function (error, user)
   {
@@ -67,6 +66,7 @@ router.get('/register', middleware.loggedOut, function(req, res, next) {
 });
 
   //POST
+  //Create new user in database
 router.post('/register', function(req, res, next) {
 
   if (req.body.email &&
@@ -94,7 +94,8 @@ router.post('/register', function(req, res, next) {
         User.create(userData, function(error, user){
           if(error){
             return next(error);
-          }else{
+          } else {
+            req.session.userId = user._id;
             return res.redirect('/profile');
           }
         });
@@ -107,21 +108,9 @@ router.post('/register', function(req, res, next) {
 })
 
 //********************* HOME ********************* //
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   return res.render('index', { title: 'Home' });
 });
-
-//********************* ABOUT ********************* //
-router.get('/about', function(req, res, next) {
-  return res.render('about', { title: 'About' });
-});
-
-//********************* CONTACT ********************* //
-router.get('/contact', function(req, res, next) {
-  return res.render('contact', { title: 'Contact' });
-});
-
-
 
 //********************* EXPORT FILE ********************* //
 module.exports = router;
